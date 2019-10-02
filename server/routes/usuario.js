@@ -4,10 +4,12 @@ const _ = require('underscore');
 
 const Usuario = require('../models/usuario.js');
 
+const { verificaToken } = require('../middlewares/auth.js')
+
 const app = express();
 
 
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificaToken, (req, res) => {
 
     let desde = req.query.desde || 0;
     let limite = req.query.limite || 5;
