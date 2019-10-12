@@ -1,19 +1,20 @@
 const express = require('express');
-const { verificaToken, verificaAdminRol } = require('../middlewares/auth.js');
+const { verificaToken } = require('../middlewares/auth.js');
 
 let app = express();
 
-let Categoria = require('../models/categoria');
+let Producto = require('../models/producto');
 
 // ============
 // Get All
 // ============
-app.get('/categoria', verificaToken, (req, res) => {
+app.get('/producto', verificaToken, (req, res) => {
 
-    Categoria.find({})
-        .sort('descripcion')
-        .populate('usuario', 'nombre email')
-        .exec((err, categorias) => {
+    Producto.find({})
+        .sort('nombre')
+        .populate('categoria', 'descripcion')
+        .populate('usuario', 'nombre')
+        .exec((err, productos) => {
             if (err) {
                 return res.status(500).json({
                     ok: false,
@@ -24,7 +25,7 @@ app.get('/categoria', verificaToken, (req, res) => {
 
             res.json({
                 ok: true,
-                categorias
+                productos
             });
 
         });
@@ -34,12 +35,13 @@ app.get('/categoria', verificaToken, (req, res) => {
 // ============
 // Get By ID
 // ============
-app.get('/categoria/:id', verificaToken, (req, res) => {
+app.get('/producto/:id', verificaToken, (req, res) => {
     let id = req.params.id;
 
-    Categoria.findOne({ _id: id })
-        .populate('usuario', 'nombre email')
-        .exec((err, categorias) => {
+    Producto.findOne({ _id: id })
+        .populate('categoria', 'descripcion')
+        .populate('usuario', 'nombre')
+        .exec((err, producto) => {
             if (err) {
                 return res.status(400).json({
                     ok: false,
@@ -49,7 +51,7 @@ app.get('/categoria/:id', verificaToken, (req, res) => {
 
             res.json({
                 ok: true,
-                categorias
+                producto
             })
         });
 });
@@ -58,15 +60,20 @@ app.get('/categoria/:id', verificaToken, (req, res) => {
 // ============
 // Create 
 // ============
-app.post('/categoria', verificaToken, (req, res) => {
+app.post('/producto', verificaToken, (req, res) => {
     let body = req.body;
 
-    let categoria = new Categoria({
+
+
+    let producto = new Producto({
+        nombre: body.nombre,
+        precioUni: body.precioUni,
         descripcion: body.descripcion,
+        categoria: body.categoria,
         usuario: req.usuario._id
     })
 
-    categoria.save((err, categoriaDB) => {
+    producto.save((err, productoDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -74,7 +81,7 @@ app.post('/categoria', verificaToken, (req, res) => {
             })
         }
 
-        if (!categoriaDB) {
+        if (!productoDB) {
             return res.status(400).json({
                 ok: false,
                 err
@@ -82,26 +89,37 @@ app.post('/categoria', verificaToken, (req, res) => {
         }
         res.json({
             ok: true,
-            categoria: categoriaDB
+            producto: productoDB
         })
     });
+
+
+
+
+
 });
 
 
 // ============
 // Update name
 // ============
-app.put('/categoria/:id', verificaToken, (req, res) => {
+app.put('/producto/:id', verificaToken, (req, res) => {
 
     let id = req.params.id;
     let body = req.body;
 
-    let desc = { descripcion: body.descripcion };
-    console.log(desc);
+    let producto = {
+        nombre: body.nombre,
+        precioUni: body.precioUni,
+        descripcion: body.descripcion,
+        categoria: body.categoria,
+        usuario: req.usuario._id
+    };
 
-    Categoria.findByIdAndUpdate(id, desc, { new: true, runValidators: true },
-        (err, categoriaDB) => {
-
+    Producto.findByIdAndUpdate(
+        id,
+        producto, { new: true, runValidators: true },
+        (err, productoDB) => {
             if (err) {
                 return res.status(500).json({
                     ok: false,
@@ -109,7 +127,7 @@ app.put('/categoria/:id', verificaToken, (req, res) => {
                 })
             }
 
-            if (!categoriaDB) {
+            if (!productoDB) {
                 return res.status(400).json({
                     ok: false,
                     err
@@ -118,7 +136,7 @@ app.put('/categoria/:id', verificaToken, (req, res) => {
 
             res.json({
                 ok: true,
-                categoria: categoriaDB
+                producto: productoDB
             })
 
         });
@@ -128,11 +146,14 @@ app.put('/categoria/:id', verificaToken, (req, res) => {
 // ============
 // Delete
 // ============
-app.delete('/categoria/:id', [verificaToken, verificaAdminRol], (req, res) => {
+app.delete('/producto/:id', verificaToken, (req, res) => {
     let id = req.params.id;
 
-    // Borrado fisico
-    Categoria.findByIdAndRemove(id, (err, categoriaDB) => {
+    req.body.disponible = 'false';
+
+
+    // Borrado logico
+    Producto.findByIdAndUpdate(id, req.body, { new: true }, (err, productoDB) => {
 
         if (err) {
             return res.status(400).json({
@@ -141,21 +162,22 @@ app.delete('/categoria/:id', [verificaToken, verificaAdminRol], (req, res) => {
             });
         }
 
-        if (!categoriaDB) {
+        if (!productoDB) {
             return res.status(400).json({
                 ok: false,
                 err: {
-                    messaje: 'Categoria no encontrada'
+                    messaje: 'Producto no encontrado'
                 }
             });
         }
 
         res.json({
             ok: true,
-            categoria: categoriaDB
+            producto: productoDB
         })
 
     });
+
 });
 
 module.exports = app;
