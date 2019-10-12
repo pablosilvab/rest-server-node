@@ -10,22 +10,23 @@ let Categoria = require('../models/categoria');
 // ============
 app.get('/categoria', verificaToken, (req, res) => {
 
-    Categoria.find({}, 'descripcion usuario')
+    Categoria.find({})
+        .sort('descripcion')
+        .populate('usuario', 'nombre email')
         .exec((err, categorias) => {
             if (err) {
-                return res.status(400).json({
+                return res.status(500).json({
                     ok: false,
                     err
                 });
             }
 
-            Categoria.countDocuments({}, (err, conteo) => {
-                res.json({
-                    ok: true,
-                    categorias,
-                    conteo
-                })
+
+            res.json({
+                ok: true,
+                categorias
             });
+
         });
 
 });
