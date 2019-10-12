@@ -10,7 +10,15 @@ let Producto = require('../models/producto');
 // ============
 app.get('/producto', verificaToken, (req, res) => {
 
+    let desde = req.query.desde || 0;
+    let limite = req.query.limite || 5;
+
+    desde = Number(desde);
+    limite = Number(limite);
+
     Producto.find({})
+        .skip(desde)
+        .limit(limite)
         .sort('nombre')
         .populate('categoria', 'descripcion')
         .populate('usuario', 'nombre')
@@ -23,10 +31,14 @@ app.get('/producto', verificaToken, (req, res) => {
             }
 
 
-            res.json({
-                ok: true,
-                productos
+            Producto.countDocuments({}, (err, conteo) => {
+                res.json({
+                    ok: true,
+                    productos,
+                    conteo
+                })
             });
+
 
         });
 
@@ -87,7 +99,7 @@ app.post('/producto', verificaToken, (req, res) => {
                 err
             })
         }
-        res.json({
+        res.status(201).json({
             ok: true,
             producto: productoDB
         })
@@ -177,6 +189,34 @@ app.delete('/producto/:id', verificaToken, (req, res) => {
         })
 
     });
+
+});
+
+
+app.get('/producto/buscar/:termino', verificaToken, (req, res) => {
+
+    let termino = req.params.termino;
+    let regex = new RegExp(termino, 'i')
+
+    Producto.find({ nombre: regex })
+        .populate('categoria', 'descripcion')
+        .exec((err, productos) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    err
+                });
+            }
+
+
+
+            res.json({
+                ok: true,
+                productos
+            });
+
+
+        });
 
 });
 
