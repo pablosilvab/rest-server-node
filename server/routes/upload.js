@@ -2,14 +2,30 @@ const express = require('express');
 const fileUpload = require('express-fileupload');
 const app = express();
 
+const Usuario = require('../models/usuario');
+
 app.use(fileUpload({ useTempFiles: true }));
 
-app.put('/upload', function(req, res) {
+app.put('/upload/:tipo/:id', function(req, res) {
+
+    let tipo = req.params.tipo;
+    let id = req.params.id;
 
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).json({
             ok: 'false',
             message: 'No se ha seleccionado ningún archivo.'
+        });
+    }
+
+    // Valida tipo
+    let tiposValidos = ['productos', 'usuarios'];
+    if (tiposValidos.indexOf(tipo) < 0) {
+        return res.status(400).json({
+            ok: false,
+            err: {
+                message: 'El tipos permitidos son ' + tiposValidos
+            }
         });
     }
 
@@ -29,9 +45,12 @@ app.put('/upload', function(req, res) {
     }
 
 
+    // Nombre unico para el archivo
+    let nombre = `${id}-${new Date().getMilliseconds()}.${extension}`;
+
 
     // Use the mv() method to place the file somewhere on your server
-    archivo.mv(`uploads/${archivo.name}`, (err) => {
+    archivo.mv(`uploads/${tipo}/${nombre}`, (err) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
