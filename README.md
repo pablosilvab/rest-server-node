@@ -1,4 +1,4 @@
-# API Rest Tienda 
+# Cafe backend API
 
 Este proyecto es un API Rest desarrollado en NodeJS. 
 
