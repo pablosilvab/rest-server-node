@@ -10,8 +10,8 @@ Mira **Deployment** para conocer como desplegar el proyecto.
 
 ### Pre-requisitos 📋
 
-Node JS.
-MongoDB
+* Node JS.
+* MongoDB
 
 ### Instalación 🔧
 
