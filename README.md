@@ -18,13 +18,13 @@ MongoDB
 Clonar el proyecto en
 
 ```
-git clone https://github.com/pablosilvab/rest-server-node
+git clone https://github.com/pablosilvab/cafe-backend-node
 ```
 
 En la ruta donde se clonó el proyecto, ejecutar con el comando: 
 
 ```
-node server/server.js
+make install
 ```
 
 ## Deployment 📦
@@ -41,4 +41,4 @@ _Menciona las herramientas que utilizaste para crear tu proyecto_
 
 ## Versionado 📌
 
-* [rest-server-node](https://github.com/pablosilvab/rest-server-node) 
+* [cafe-backend-node](https://github.com/pablosilvab/cafe-backend-node) 
