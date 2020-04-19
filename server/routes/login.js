@@ -79,6 +79,8 @@ app.post('/google', async(req, res) => {
 
     let token = req.body.idtoken;
 
+    console.log('req token: ', token);
+
     let googleUser = await verify(token)
         .catch(e => {
             res.status(403).json({
@@ -86,6 +88,8 @@ app.post('/google', async(req, res) => {
                 err: e
             });
         });
+    
+    console.log(googleUser);
 
     Usuario.findOne({ email: googleUser.email }, (err, usuarioDB) => {
 
