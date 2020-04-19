@@ -27,13 +27,22 @@ En la ruta donde se clonó el proyecto, ejecutar con el comando:
 make install
 ```
 
+## Ejecución
+
+Ingresar al URL http://localhost:3000/
+
+La aplicación utiliza un Sing-in de Google, por lo que se necesita un Client-ID.
+
 ## Deployment 📦
+
+Al desplegar la aplicación asegúrate de permitir que el server de Mongo permita conectarse a Heroku.
+
+
+
 
 In progress..
 
 ## Construido con 🛠️
-
-_Menciona las herramientas que utilizaste para crear tu proyecto_
 
 * [Node JS](https://nodejs.org/en/) - Node JS v12.9.0
 * [Mongo DB](https://www.mongodb.com/es) - Base de datos Mongo DB
