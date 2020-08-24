@@ -97,27 +97,8 @@ app.post('/google', async(req, res) => {
             })
         }
 
-        if (usuarioDB) {
-            if (!usuarioDB.google) {
-                return res.status(400).json({
-                    ok: false,
-                    err: {
-                        message: 'Debe de usar su autenticación normal'
-                    }
-                })
-            } else {
-                let token = jwt.sign({
-                    usuario: usuarioDB
-                }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN })
-
-                return res.json({
-                    ok: true,
-                    usuario: usuarioDB,
-                    token
-                })
-            }
-        } else {
-
+        if (!usuarioDB) {
+            
             let usuario = new Usuario();
             usuario.nombre = googleUser.nombre;
             usuario.email = googleUser.email;
@@ -132,6 +113,7 @@ app.post('/google', async(req, res) => {
                         err
                     })
                 }
+                
                 let token = jwt.sign({
                     usuario: usuarioDB
                 }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN })
@@ -142,7 +124,27 @@ app.post('/google', async(req, res) => {
                     token
                 })
             });
-        }
+        } 
+
+        if (!usuarioDB.google) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'Debe de usar su autenticación normal'
+                }
+            })
+        } 
+
+        let token = jwt.sign({
+            usuario: usuarioDB
+        }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN })
+
+        return res.json({
+            ok: true,
+            usuario: usuarioDB,
+            token
+        })
+        
     });
 });
 
