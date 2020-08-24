@@ -25,7 +25,8 @@
     "start": "node src/index.js",
     "start:dev": "nodemon src/index.js",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
