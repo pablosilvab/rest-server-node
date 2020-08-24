@@ -24,10 +24,16 @@ git clone https://github.com/pablosilvab/cafe-backend-node
 En la ruta donde se clonó el proyecto, ejecutar con el comando: 
 
 ```
-make install
+npm install
 ```
 
 ## Ejecución
+
+Ejecutar:
+
+```
+npm start
+```
 
 Ingresar al URL http://localhost:3000/
 
