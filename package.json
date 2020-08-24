@@ -18,12 +18,14 @@
     "underscore": "^1.10.2"
   },
   "devDependencies": {
+    "jest": "^26.4.2",
     "nodemon": "^2.0.4"
   },
   "scripts": {
-    "start": "node server/server.js",
-    "start:dev": "nodemon server/server.js", 
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "start:dev": "nodemon src/index.js",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
   },
   "repository": {
     "type": "git",
