@@ -35,6 +35,12 @@ Ejecutar:
 npm start
 ```
 
+o utilizando nodemon:
+
+```
+npm run start:dev
+```
+
 Ingresar al URL http://localhost:3000/
 
 La aplicación utiliza un Sing-in de Google, por lo que se necesita un Client-ID.
